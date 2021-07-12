@@ -1,0 +1,67 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+        <div class="container-fluid home-slider">
+            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" style="background-color: #343a40!important">
+                        <div class="carousel-caption d-none d-md-block">
+                            <form action="{% url 'search' %}" class="my-2 my-lg-0">
+                                <input name="q" type="text" class="form-control" placeholder="Поиск" aria-label="Поиск">
+                                <button class="btn btn-outline-success mt-3" type="submit">Поиск</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb" class="mt-4">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Главная</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Поиск</li>
+                        </ol>
+                    </nav>
+
+                    <p class="lead">Найдено записей: {{ count }}</p>
+                    {% for post in result %}
+                        <a href="{% url 'post_detail' post.id %}"><h2>{{ post.title }}</h2></a>
+                        <p>{{ post.h1 }}</p>
+                        <hr>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+{% block pagination %}
+    <nav aria-label="Paginate me">
+      <ul class="pagination justify-content-center">
+        {% if results.has_previous %}
+          <a class="page-link" href="?page={{ results.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" tabindex="-1">Предыдущая</a>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link disabled" href="#" tabindex="-1">Предыдущая</a>
+        </li>
+        {% endif %}
+        {% for i in result.paginator.page_range %}
+        {% if i == result.number %}
+          <li class="page-item active"><a class="page-link" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if result.has_next %}
+          <a class="page-link" href="?page={{ result.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Следующая</a>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Следующая</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+    <br>
+{% endblock %}
+{% endblock content %}
