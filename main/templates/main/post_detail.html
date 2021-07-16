@@ -1,6 +1,10 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
+{% block title %}
+    <title>{{ post.title }}</title>
+{% endblock title %}
+
 {% block content %}
         <div class="container-fluid home-slider">
             <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
@@ -22,7 +26,7 @@
                             <li class="breadcrumb-item active" aria-current="page">Пост номер 1</li>
                         </ol>
                     </nav>
-                    <img class="img-fluid rounded " src="{{ post.image.url }}" alt="">
+                    <img class="img-fluid rounded" src="{{ post.image.url }}" alt="">
                     <hr>
                     <p class="lead">{{ post.h1 }}</p>
                     <p>{{ post.text }}</p>
@@ -32,28 +36,35 @@
                     </div>
                     <hr>
                     <div class="d-flex">
-                        <div class="mr-auto p-2 lead">Автор: Вася Пупкин</div>
-                        <div class="p-2">Опубликовано: 20.10.2020</div>
+                        <div class="mr-auto p-2 lead">Автор: {{ post.author }}</div>
+                        <div class="p-2">Опубликовано: {{ post.created_at }}</div>
                     </div>
                     <hr>
                     <div class="card my-4">
                         <h5 class="card-header">Прокомментируй:</h5>
+                        {% if user.is_authenticated %}
                         <div class="card-body">
-                            <form>
+                            <form method="post">
+                                {% csrf_token %}
                                 <div class="form-group">
-                                    <textarea class="form-control" rows="3"></textarea>
+                                    {{ comment_form.text }}
                                 </div>
                                 <button type="submit" class="btn btn-primary">Отправить</button>
                             </form>
                         </div>
+                        {% else %}
+                        <h6 class="card-header"><a href="{% url 'signin' %}">Авторизуйтесь</a> или <a href="{% url 'signup' %}">Зарегистрируйтесь</a></h6>
+                        {% endif %}
                     </div>
+                    {% for comment in post.comments.all %}
                     <div class="media mb-4">
                         <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
                         <div class="media-body">
-                            <h5 class="mt-0">Дуся Иванова</h5>
-                            Мое очень важное мнение по данной статье. Мое очень важное мнение по данной статье. Мое очень важное мнение по данной статье. Мое очень важное мнение по данной статье. Мое очень важное мнение по данной статье.
+                            <h5 class="mt-0">{{ comment.user }}</h5>
+                            {{ comment.text }}
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
 
                 <div class="col-md-4">

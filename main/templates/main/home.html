@@ -1,6 +1,10 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
+{% block title %}
+    <title>Блог. Главная страница!</title>
+{% endblock title %}
+
 {% block content %}
     <div class="container-fluid home-slider">
       <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
@@ -51,7 +55,7 @@
             <img src="{{ post.image.url }}" alt="" class="card-img-top">
             <div class="card-body">
               <h4 class="card-title">{{ post.h1 }}</h4>
-              <p class="card-text">Это красткое описание поста. Это красткое описание поста. Это красткое описание поста.
+              <p class="card-text">{{ post.description }}
               <br>
                 <a href="" class="mr-1 badge badge-info">#CSS</a>
                 <a href="" class="mr-1 badge badge-info">#JavaScript</a>
@@ -60,7 +64,7 @@
                 <div class="btn-group">
                   <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">Подробнее</a>
                 </div>
-                <small class="text-muted">22.10.2020</small>
+                <small class="text-muted">{{ post.created_at }}</small>
               </div>
             </div>
           </div>

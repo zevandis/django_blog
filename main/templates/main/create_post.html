@@ -1,0 +1,66 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Создание поста</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="text-center">
+        <form class="form-create" enctype="multipart/form-data" method="post" action="{% url 'create_post' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="md-form mb-0">
+                                    <label for="h1" class="sr-only">Ваше имя</label>
+                                    {{ create_form.h1 }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="md-form mb-0">
+                                    <label for="title" class="sr-only">Ваша почта</label>
+                                    {{ create_form.title }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="md-form mb-0">
+                                    <label for="description" class="sr-only">Тема</label>
+                                    {{ create_form.description }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="md-form mb-0">
+                                    <label for="url" class="sr-only">Тема</label>
+                                    {{ create_form.url }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="md-form">
+                                    <label for="text" class="sr-only">Ваше сообщение</label>
+                                    {{ create_form.text }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="md-form">
+                                    <p>Выберите изображение:</p>
+                                    <label for="image" class="sr-only"></label>
+                                    {{ create_form.image }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center text-md-left mt-3">
+                            <button class="btn btn-primary" type="submit">Отправить</button>
+                        </div>
+                    </form>
+    </div>
+{% endblock content %}

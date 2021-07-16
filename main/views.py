@@ -7,8 +7,8 @@ from django.views import View
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponseRedirect, HttpResponse
 
-from .models import Post
-from .forms import SignUpForm, SignInForm, FeedBackForm
+from .models import Post, Comment
+from .forms import SignUpForm, SignInForm, FeedBackForm, CommentForm, CreatePostForm
 
 
 
@@ -20,16 +20,29 @@ class PostsList(ListView):
     template_name = 'main/home.html'
 
 
-class PostDetail(DetailView):
+class PostDetail(View):
 
-    model = Post
-    slug_field = 'id'
-    template_name = 'main/post_detail.html'
+    def get(self, request, pk, *args, **kwargs):
+        post = Post.objects.get(id=pk)
+        last_posts = Post.objects.all().order_by('-id')[:5]
+        comment_form = CommentForm()
+        return render(request, 'main/post_detail.html', context={
+            'post': post,
+            'last_posts': last_posts,
+            'comment_form': comment_form
+        })
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['last_posts'] = Post.objects.all().order_by('-id')[:5]
-        return context
+    def post(self, request, pk, *args, **kwargs):
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            text = request.POST['text']
+            post = Post.objects.get(id=pk)
+            user = self.request.user
+            comment = Comment.objects.create(post=post, text=text, user=user)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        return render(request, 'main/post_detail.html', context={
+            'comment_form': comment_form
+        })
 
 
 class SignUpView(View):
@@ -117,4 +130,37 @@ class SearchView(View):
         return render(request, 'main/search.html', context={
             'result': page_obj,
             'count': paginator.count
+        })
+
+
+class CreatePostView(View):
+    def get(self, request, *args, **kwargs):
+        create_form = CreatePostForm()
+        return render(request, 'main/create_post.html', context={
+            'create_form': create_form
+        })
+
+    def post(self, request, *args, **kwargs):
+        create_form = CreatePostForm(request.POST, request.FILES)
+        if create_form.is_valid():
+            print(request.POST, request.FILES)
+            h1 = request.POST['h1']
+            title = request.POST['title']
+            description = request.POST['description']
+            url = request.POST['url']
+            text = request.POST['text']
+            image = request.FILES['image']
+            author = self.request.user
+            post = Post.objects.create(
+                h1=h1,
+                title=title,
+                description=description,
+                url=url,
+                text=text,
+                author=author,
+                image=image
+            )
+            return HttpResponseRedirect('/')
+        return render(request, 'main/create_post.html', context={
+            'create_form': create_form
         })

@@ -42,6 +42,12 @@ footer {
     margin: auto;
 }
 
+.form-create {
+    width: 100%;
+    max-width: 990px;
+    padding: 15px;
+    margin: 100px auto;
+
 input {
     margin: 20px 0px;
 }

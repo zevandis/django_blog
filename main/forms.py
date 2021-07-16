@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
+from .models import Comment
+
 
 class SignUpForm(forms.Form):
 
@@ -81,6 +83,7 @@ class FeedBackForm(forms.Form):
             'placeholder': 'Ваше имя'
         })
     )
+
     email = forms.CharField(
         max_length=100,
         widget=forms.EmailInput(attrs={
@@ -89,6 +92,7 @@ class FeedBackForm(forms.Form):
             'placeholder': 'Ваша почта'
         })
     )
+
     subject = forms.CharField(
         max_length=200,
         widget=forms.TextInput(attrs={
@@ -97,6 +101,7 @@ class FeedBackForm(forms.Form):
             'placeholder': 'Тема'
         })
     )
+
     message = forms.CharField(
         widget=forms.Textarea(attrs={
             'class': 'form-control md-textarea',
@@ -105,3 +110,72 @@ class FeedBackForm(forms.Form):
             'placeholder': 'Ваше сообщение'
         })
     )
+
+
+class CreatePostForm(forms.Form):
+
+    h1 = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'id': 'h1',
+            'placeholder': 'Заголовок'
+        })
+    )
+
+    title = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'id': 'title',
+            'placeholder': 'Название'
+        })
+    )
+
+    url = forms.SlugField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'id': 'url',
+            'placeholder': 'url'
+        })
+    )
+
+    description = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'id': 'description',
+            'placeholder': 'Описание'
+        })
+    )
+
+    text = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'id': 'text',
+            'placeholder': 'Текст'
+        })
+    )
+
+    image = forms.ImageField()
+    '''h1 = models.CharField(max_length=200)
+    title = models.CharField(max_length=200)
+    url = models.SlugField()
+    description = models.TextField(blank=True)
+    text = models.TextField()
+    image = models.ImageField(blank=True)
+    created_at = models.DateField(default=timezone.now)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    tag = models.CharField(max_length=200, blank=True)'''
+
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('text',)
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3
+            })
+        }

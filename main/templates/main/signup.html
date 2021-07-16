@@ -1,6 +1,10 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
+{% block title %}
+    <title>Регистрация</title>
+{% endblock title %}
+
 {% block content %}
     <div class="text-center">
         {% if form.errors %}
